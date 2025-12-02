@@ -12,7 +12,7 @@ import java.util.List;
 public class RoomDAO {
 
     public Room createRoom(Room room) {
-        String sqlCreate = "INSERT INTO room (topic, sector, admin_id) VALUES (?, ?, ?)";
+        String sqlCreate = "INSERT INTO rooms (topic, sector, admin_id) VALUES (?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sqlCreate, Statement.RETURN_GENERATED_KEYS)) {
@@ -38,7 +38,7 @@ public class RoomDAO {
     }
 
     public Room getRoomById(int id) {
-        String sql = "SELECT * FROM room WHERE room_id = ?";
+        String sql = "SELECT * FROM rooms WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -48,7 +48,7 @@ public class RoomDAO {
 
             if (rs.next()) {
                 Room room = new Room();
-                room.setRoomId(rs.getInt("room_id"));
+                room.setRoomId(rs.getInt("id"));
                 room.setTopic(rs.getString("topic"));
                 room.setSector(rs.getString("sector"));
                 room.setAdminId(rs.getInt("admin_id"));
@@ -64,7 +64,7 @@ public class RoomDAO {
 
     public List<Room> listRooms() {
         List<Room> rooms = new ArrayList<>();
-        String sql = "SELECT * FROM room";
+        String sql = "SELECT * FROM rooms";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql);
@@ -72,7 +72,7 @@ public class RoomDAO {
 
             while (rs.next()) {
                 Room room = new Room();
-                room.setRoomId(rs.getInt("room_id"));
+                room.setRoomId(rs.getInt("id"));
                 room.setTopic(rs.getString("topic"));
                 room.setSector(rs.getString("sector"));
                 room.setAdminId(rs.getInt("admin_id"));
@@ -87,7 +87,7 @@ public class RoomDAO {
     }
 
     public boolean updateRoom(Room room) {
-        String sql = "UPDATE room SET topic = ?, sector = ?, admin_id = ? WHERE room_id = ?";
+        String sql = "UPDATE rooms SET topic = ?, sector = ?, admin_id = ? WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -106,7 +106,7 @@ public class RoomDAO {
     }
 
     public boolean deleteRoom(int roomId) {
-        String sql = "DELETE FROM room WHERE room_id = ?";
+        String sql = "DELETE FROM rooms WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {

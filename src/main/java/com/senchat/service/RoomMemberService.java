@@ -30,6 +30,15 @@ public class RoomMemberService {
             System.out.println("Role cannot be empty.");
             return null;
         }
+        RoomMember existingMember = roomMemberDAO.getMemberByRoomAndUser(
+                member.getRoomId(),
+                member.getUserId()
+        );
+
+        if (existingMember != null) {
+            // Já existe → retorna sem adicionar novamente
+            return existingMember;
+        }
 
         return roomMemberDAO.addMember(member);
     }

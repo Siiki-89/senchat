@@ -8,7 +8,7 @@ import java.util.List;
 public class RoomMemberDAO {
 
     public RoomMember addMember(RoomMember member) {
-        String sqlAdd = "INSERT INTO room_member (room_id, user_id, role) VALUES (?, ?, ?)";
+        String sqlAdd = "INSERT INTO room_members (room_id, user_id, role) VALUES (?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstm = connection.prepareStatement(sqlAdd, Statement.RETURN_GENERATED_KEYS)) {
@@ -34,8 +34,36 @@ public class RoomMemberDAO {
         }
     }
 
+    public RoomMember getMemberByRoomAndUser(int roomId, int userId) {
+        String sqlSelect = "SELECT * FROM room_members WHERE room_id = ? AND user_id = ?";
+        RoomMember member = null;
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement pstm = connection.prepareStatement(sqlSelect)) {
+
+            pstm.setInt(1, roomId);
+            pstm.setInt(2, userId);
+
+            try (ResultSet rs = pstm.executeQuery()) {
+                if (rs.next()) {
+                    member = new RoomMember(
+                            rs.getInt("id"),
+                            rs.getInt("room_id"),
+                            rs.getInt("user_id"),
+                            rs.getString("role")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching member: " + e.getMessage());
+        }
+
+        return member;
+    }
+
     public boolean removeMember(int roomId, int userId) {
-        String sqlRemove = "DELETE FROM room_member WHERE room_id = ? AND user_id = ?";
+        String sqlRemove = "DELETE FROM room_members WHERE room_id = ? AND user_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstm = connection.prepareStatement(sqlRemove)) {
@@ -53,7 +81,7 @@ public class RoomMemberDAO {
 
     public List<RoomMember> listMembersByRoom(int roomId) {
         List<RoomMember> members = new ArrayList<>();
-        String sqlListMembers = "SELECT * FROM room_member WHERE room_id = ?";
+        String sqlListMembers = "SELECT * FROM room_members WHERE room_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstm = connection.prepareStatement(sqlListMembers)) {
@@ -63,7 +91,7 @@ public class RoomMemberDAO {
 
             while (rs.next()) {
                 RoomMember member = new RoomMember();
-                member.setId(rs.getInt("member_id"));
+                member.setId(rs.getInt("id"));
                 member.setRoomId(rs.getInt("room_id"));
                 member.setUserId(rs.getInt("user_id"));
                 member.setRole(rs.getString("role"));
@@ -78,7 +106,7 @@ public class RoomMemberDAO {
     }
 
     public String getRoleOfUserInRoom(int roomId, int userId) {
-        String sqlSelect = "SELECT role FROM room_member WHERE room_id = ? AND user_id = ?";
+        String sqlSelect = "SELECT role FROM room_members WHERE room_id = ? AND user_id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstm = connection.prepareStatement(sqlSelect)) {
@@ -98,4 +126,5 @@ public class RoomMemberDAO {
 
         return null;
     }
+
 }

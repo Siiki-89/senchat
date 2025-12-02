@@ -8,7 +8,7 @@ import java.util.List;
 public class MessageDAO {
 
     public Message sendMessage(Message message) {
-        String sqlInsert = "INSERT INTO message (user_id, room_id, content, sent) VALUES (?, ?, ?, ?)";
+        String sqlInsert = "INSERT INTO messages (user_id, room_id, content, sent) VALUES (?, ?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstm = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
@@ -30,14 +30,14 @@ public class MessageDAO {
             return message;
 
         } catch (SQLException e) {
-            System.out.println("Error sending message: " + e.getMessage());
+            System.out.println("Error sending messages: " + e.getMessage());
             return null;
         }
     }
 
     public List<Message> listMessagesByRoom(int roomId) {
         List<Message> messages = new ArrayList<>();
-        String sqlList = "SELECT * FROM message WHERE room_id = ? ORDER BY sent ASC";
+        String sqlList = "SELECT * FROM messages WHERE room_id = ? ORDER BY sent ASC";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstm = connection.prepareStatement(sqlList)) {
@@ -47,7 +47,7 @@ public class MessageDAO {
 
             while (rs.next()) {
                 Message msg = new Message();
-                msg.setId(rs.getInt("message_id"));
+                msg.setId(rs.getInt("id"));
                 msg.setUserId(rs.getInt("user_id"));
                 msg.setRoomId(rs.getInt("room_id"));
                 msg.setContent(rs.getString("content"));
@@ -67,7 +67,7 @@ public class MessageDAO {
         List<Message> messages = new ArrayList<>();
 
         String sqlListMessage =
-                "SELECT * FROM message " +
+                "SELECT * FROM messages " +
                         "WHERE room_id IN ( " +
                         "    SELECT room_id FROM room_member " +
                         "    GROUP BY room_id " +
@@ -86,7 +86,7 @@ public class MessageDAO {
 
             while (rs.next()) {
                 Message msg = new Message();
-                msg.setId(rs.getInt("message_id"));
+                msg.setId(rs.getInt("id"));
                 msg.setUserId(rs.getInt("user_id"));
                 msg.setRoomId(rs.getInt("room_id"));
                 msg.setContent(rs.getString("content"));

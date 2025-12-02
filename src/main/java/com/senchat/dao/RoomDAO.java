@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoomDAO {
 
@@ -23,7 +25,7 @@ public class RoomDAO {
             if (rows > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-                    room.setId(rs.getInt(1));
+                    room.setRoomId(rs.getInt(1));
                 }
             }
 
@@ -46,7 +48,7 @@ public class RoomDAO {
 
             if (rs.next()) {
                 Room room = new Room();
-                room.setId(rs.getInt("room_id"));
+                room.setRoomId(rs.getInt("room_id"));
                 room.setTopic(rs.getString("topic"));
                 room.setSector(rs.getString("sector"));
                 room.setAdminId(rs.getInt("admin_id"));
@@ -70,7 +72,7 @@ public class RoomDAO {
 
             while (rs.next()) {
                 Room room = new Room();
-                room.setId(rs.getInt("room_id"));
+                room.setRoomId(rs.getInt("room_id"));
                 room.setTopic(rs.getString("topic"));
                 room.setSector(rs.getString("sector"));
                 room.setAdminId(rs.getInt("admin_id"));
@@ -93,7 +95,7 @@ public class RoomDAO {
             stmt.setString(1, room.getTopic());
             stmt.setString(2, room.getSector());
             stmt.setInt(3, room.getAdminId());
-            stmt.setInt(4, room.getId());
+            stmt.setInt(4, room.getRoomId());
 
             return stmt.executeUpdate() > 0;
 

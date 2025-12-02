@@ -1,6 +1,6 @@
 package com.senchat.dao;
-import com.senchat.model.Room;
 
+import com.senchat.model.Room;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

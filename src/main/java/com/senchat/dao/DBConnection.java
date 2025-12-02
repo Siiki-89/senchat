@@ -12,9 +12,9 @@ public class DBConnection {
     public static Connection getConnection(){
         try{
             return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e){
-            e.printStackTrace();
-            return null;
+        } catch (SQLException ex){
+            ex.printStackTrace(); // mostra a causa real
+            throw new RuntimeException("Error connection DB");
         }
     }
 

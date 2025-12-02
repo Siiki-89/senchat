@@ -53,7 +53,7 @@ public class UserService {
         return user;
     }
 
-    public User getUserById(int id) throws Exception {
+    public String getUserById(int id) throws Exception {
         if (id <= 0) {
             throw new Exception("Invalid ID.");
         }
@@ -64,7 +64,7 @@ public class UserService {
             throw new Exception("User not found.");
         }
 
-        return user;
+        return user.getNickName();
     }
 
     public List<User> listAllUsers() {

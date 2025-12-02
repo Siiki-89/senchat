@@ -17,13 +17,11 @@ public class Main {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    // services
     private static final UserService userService = new UserService();
     private static final RoomService roomService = new RoomService();
     private static final RoomMemberService roomMemberService = new RoomMemberService();
     private static final MessageService messageService = new MessageService();
 
-    // runtime state
     private static User loggedUser = null;
     private static Room currentRoom = null;
 
@@ -41,7 +39,6 @@ public class Main {
         }
     }
 
-    // ---------- Menus ----------
     private static void showAuthMenu() {
         System.out.println("\n--- AUTH ---");
         System.out.println("1 - Login");
@@ -101,7 +98,6 @@ public class Main {
         }
     }
 
-    // ---------- Auth actions ----------
     private static void handleLogin() {
         try {
             System.out.print("Email: ");
@@ -150,7 +146,6 @@ public class Main {
         System.exit(0);
     }
 
-    // ---------- Room actions ----------
     private static void handleCreateRoom() {
         try {
             Room room = new Room();
@@ -199,14 +194,12 @@ public class Main {
                 return;
             }
 
-            // add as member (if not already)
             RoomMember member = new RoomMember();
             member.setRoomId(room.getRoomId());
             member.setUserId(loggedUser.getId());
             member.setRole("member");
             RoomMember added = roomMemberService.addMember(member);
             if (added == null) {
-                // maybe already exists or failed; still let user enter
                 System.out.println("Entering room (add member returned null).");
             } else {
                 System.out.println("You joined the room.");
@@ -263,7 +256,6 @@ public class Main {
         if (ok) currentRoom = null;
     }
 
-    // ---------- Room utilities ----------
     private static void handleListMembers() {
         if (currentRoom == null) {
             System.out.println("No room selected.");
@@ -276,11 +268,14 @@ public class Main {
         }
         System.out.println("\n--- Members ---");
         for (com.senchat.model.RoomMember m : members) {
-            System.out.println("MemberID: " + m.getId() + " | UserID: " + m.getUserId() + " | Role: " + m.getRole());
+            try {
+                System.out.println("MemberID: " + m.getId() + " | UserID: " + m.getUserId() + " | username: " + userService.getUserById(m.getUserId()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    // ---------- Message actions ----------
     private static void handleSendMessage() {
         if (currentRoom == null) {
             System.out.println("No room selected.");
@@ -323,7 +318,6 @@ public class Main {
         }
     }
 
-    // ---------- Account menu ----------
     private static void handleAccountMenu() {
         System.out.println("\n--- ACCOUNT ---");
         System.out.println("1 - Show my profile");

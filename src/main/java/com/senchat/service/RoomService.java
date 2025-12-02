@@ -9,35 +9,62 @@ public class RoomService {
 
     private final RoomDAO roomDAO = new RoomDAO();
 
-    public void createRoom(Room room) throws Exception {
+    public Room createRoom(Room room) {
+        if (room == null) {
+            System.out.println("Room cannot be null.");
+            return null;
+        }
+
         if (room.getTopic() == null || room.getTopic().isEmpty()) {
-            throw new Exception("Topic cannot be empty.");
+            System.out.println("Room topic is required.");
+            return null;
         }
 
         if (room.getSector() == null || room.getSector().isEmpty()) {
-            throw new Exception("Sector cannot be empty.");
+            System.out.println("Room sector is required.");
+            return null;
         }
 
         if (room.getAdminId() <= 0) {
-            throw new Exception("Invalid admin ID.");
+            System.out.println("Invalid admin ID.");
+            return null;
         }
 
-        roomDAO.create(room);
-    }
-
-    public List<Room> getAllRooms() {
-        return roomDAO.findAll();
+        return roomDAO.createRoom(room);
     }
 
     public Room getRoomById(int id) {
-        return roomDAO.findById(id);
+        if (id <= 0) {
+            System.out.println("Invalid room ID.");
+            return null;
+        }
+        return roomDAO.getRoomById(id);
     }
 
-    public void updateRoom(Room room) {
-        roomDAO.update(room);
+    public List<Room> listRooms() {
+        return roomDAO.listRooms();
     }
 
-    public void deleteRoom(int id) {
-        roomDAO.delete(id);
+    public boolean updateRoom(Room room) {
+        if (room == null) {
+            System.out.println("Room cannot be null.");
+            return false;
+        }
+
+        if (room.getRoomId() <= 0) {
+            System.out.println("Invalid room ID.");
+            return false;
+        }
+
+        return roomDAO.updateRoom(room);
+    }
+
+    public boolean deleteRoom(int roomId) {
+        if (roomId <= 0) {
+            System.out.println("Invalid room ID.");
+            return false;
+        }
+
+        return roomDAO.deleteRoom(roomId);
     }
 }

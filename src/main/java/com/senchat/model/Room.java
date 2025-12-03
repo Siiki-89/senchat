@@ -9,13 +9,6 @@ public class Room {
     public Room() {
     }
 
-    public Room(int roomId, String topic, String sector, int adminId) {
-        this.id = roomId;
-        this.topic = topic;
-        this.sector = sector;
-        this.adminId = adminId;
-    }
-
     public int getRoomId() {
         return id;
     }

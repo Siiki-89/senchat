@@ -49,18 +49,4 @@ public class MessageService {
         return messageDAO.listMessagesByRoom(roomId);
     }
 
-    public List<Message> listMessagesBetweenUsers(int user1, int user2) {
-
-        if (user1 <= 0 || user2 <= 0) {
-            System.out.println("Invalid user IDs.");
-            return null;
-        }
-
-        if (user1 == user2) {
-            System.out.println("Users must be different.");
-            return null;
-        }
-
-        return messageDAO.listMessagesBetweenUsers(user1, user2);
-    }
 }

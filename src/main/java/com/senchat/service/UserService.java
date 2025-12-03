@@ -11,25 +11,7 @@ public class UserService {
 
     public boolean register(User user) throws Exception {
 
-        if (user.getName() == null || user.getName().trim().isEmpty()) {
-            throw new Exception("Name cannot be empty.");
-        }
-
-        if (user.getNickName() == null || user.getNickName().trim().isEmpty()) {
-            throw new Exception("Nickname cannot be empty.");
-        }
-
-        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
-            throw new Exception("Email cannot be empty.");
-        }
-
-        if (!user.getEmail().contains("@")) {
-            throw new Exception("Invalid email format.");
-        }
-
-        if (user.getPassword() == null || user.getPassword().length() < 6) {
-            throw new Exception("Password must have at least 6 characters.");
-        }
+        user.validar();
 
         return userDAO.create(user);
     }
@@ -65,10 +47,6 @@ public class UserService {
         }
 
         return user.getNickName();
-    }
-
-    public List<User> listAllUsers() {
-        return userDAO.findAll();
     }
 
     public boolean updateUser(User user) throws Exception {

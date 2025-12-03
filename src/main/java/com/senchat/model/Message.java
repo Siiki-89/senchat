@@ -12,14 +12,6 @@ public class Message {
     public Message() {
     }
 
-    public Message(int id, int userId, int roomId, String content, LocalDateTime sent) {
-        this.id = id;
-        this.userId = userId;
-        this.roomId = roomId;
-        this.content = content;
-        this.sent = sent;
-    }
-
     public int getId() {
         return id;
     }

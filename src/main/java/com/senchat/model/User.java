@@ -1,21 +1,41 @@
 package com.senchat.model;
 
-public class User {
+public class User extends Person {
+
     private int id;
-    private String name;
     private String nickName;
     private String password;
-    private String email;
 
     public User() {
+        super();
     }
 
-    public User(int userId, String name, String nickName, String password, String email) {
-        this.id = userId;
-        this.name = name;
-        this.nickName = nickName;
-        this.password = password;
-        this.email = email;
+    @Override
+    public String getPresentation() {
+        return "Usuário: " + getNickName();
+    }
+
+    public void validar() throws Exception {
+
+        if (this.name == null || this.name.trim().isEmpty()) {
+            throw new Exception("Name cannot be empty.");
+        }
+
+        if (this.email == null || this.email.trim().isEmpty()) {
+            throw new Exception("Email cannot be empty.");
+        }
+
+        if (!this.email.contains("@")) {
+            throw new Exception("Invalid email format.");
+        }
+
+        if (this.nickName == null || this.nickName.trim().isEmpty()) {
+            throw new Exception("Nickname cannot be empty.");
+        }
+
+        if (this.password == null || this.password.length() < 6) {
+            throw new Exception("Password must have at least 6 characters.");
+        }
     }
 
     public int getId() {
@@ -24,14 +44,6 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getNickName() {
@@ -48,13 +60,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

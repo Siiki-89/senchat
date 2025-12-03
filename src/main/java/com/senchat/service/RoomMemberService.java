@@ -36,7 +36,6 @@ public class RoomMemberService {
         );
 
         if (existingMember != null) {
-            // Já existe → retorna sem adicionar novamente
             return existingMember;
         }
 
@@ -68,18 +67,4 @@ public class RoomMemberService {
         return roomMemberDAO.listMembersByRoom(roomId);
     }
 
-    public String getRoleOfUserInRoom(int roomId, int userId) {
-
-        if (roomId <= 0) {
-            System.out.println("Invalid room ID.");
-            return null;
-        }
-
-        if (userId <= 0) {
-            System.out.println("Invalid user ID.");
-            return null;
-        }
-
-        return roomMemberDAO.getRoleOfUserInRoom(roomId, userId);
-    }
 }

@@ -56,7 +56,8 @@ public class Main {
     }
 
     private static void showMainMenu() {
-        System.out.println("\n--- MAIN --- (logged as: " + loggedUser.getNickName() + ")");
+        System.out.println("\n--- MAIN --- (Logado como: " + loggedUser.getPresentation() + ")");
+
         System.out.println("1 - Create room");
         System.out.println("2 - List rooms");
         System.out.println("3 - Enter room");
@@ -81,7 +82,7 @@ public class Main {
         System.out.println("2 - Show messages");
         System.out.println("3 - List members");
         System.out.println("4 - Leave room");
-        // admin-only shortcuts
+
         System.out.println("5 - Update room (admin only)");
         System.out.println("6 - Delete room (admin only)");
         System.out.print("Option: ");
@@ -107,7 +108,9 @@ public class Main {
             String password = scanner.nextLine();
 
             loggedUser = userService.login(email, password);
-            System.out.println("Login successful. Welcome, " + loggedUser.getNickName() + "!");
+
+            System.out.println("Login successful. Welcome, " + loggedUser.getPresentation() + "!");
+
         } catch (Exception e) {
             System.out.println("Login failed: " + e.getMessage());
         }
@@ -116,6 +119,7 @@ public class Main {
     private static void handleRegister() {
         try {
             User user = new User();
+
             System.out.print("Name: ");
             user.setName(scanner.nextLine());
 
@@ -198,6 +202,7 @@ public class Main {
             member.setRoomId(room.getRoomId());
             member.setUserId(loggedUser.getId());
             member.setRole("member");
+
             RoomMember added = roomMemberService.addMember(member);
             if (added == null) {
                 System.out.println("Entering room (add member returned null).");
@@ -220,10 +225,8 @@ public class Main {
     }
 
     private static void handleUpdateRoom() {
-        if (currentRoom == null) {
-            System.out.println("No room selected.");
-            return;
-        }
+        if (currentRoom == null) return;
+
         if (currentRoom.getAdminId() != loggedUser.getId()) {
             System.out.println("Only admin can update.");
             return;
@@ -242,10 +245,8 @@ public class Main {
     }
 
     private static void handleDeleteRoom() {
-        if (currentRoom == null) {
-            System.out.println("No room selected.");
-            return;
-        }
+        if (currentRoom == null) return;
+
         if (currentRoom.getAdminId() != loggedUser.getId()) {
             System.out.println("Only admin can delete.");
             return;
@@ -257,30 +258,27 @@ public class Main {
     }
 
     private static void handleListMembers() {
-        if (currentRoom == null) {
-            System.out.println("No room selected.");
-            return;
-        }
-        List<com.senchat.model.RoomMember> members = roomMemberService.listMembersByRoom(currentRoom.getRoomId());
+        if (currentRoom == null) return;
+
+        List<RoomMember> members = roomMemberService.listMembersByRoom(currentRoom.getRoomId());
         if (members == null || members.isEmpty()) {
             System.out.println("No members found.");
             return;
         }
         System.out.println("\n--- Members ---");
-        for (com.senchat.model.RoomMember m : members) {
+        for (RoomMember m : members) {
             try {
-                System.out.println("MemberID: " + m.getId() + " | UserID: " + m.getUserId() + " | username: " + userService.getUserById(m.getUserId()));
+                String username = userService.getUserById(m.getUserId());
+                System.out.println("MemberID: " + m.getId() + " | UserID: " + m.getUserId() + " | " + username);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.out.println("Error fetching user name: " + e.getMessage());
             }
         }
     }
 
     private static void handleSendMessage() {
-        if (currentRoom == null) {
-            System.out.println("No room selected.");
-            return;
-        }
+        if (currentRoom == null) return;
+
         System.out.print("Message: ");
         String text = scanner.nextLine();
         if (text == null || text.trim().isEmpty()) {
@@ -303,10 +301,8 @@ public class Main {
     }
 
     private static void handleShowMessages() {
-        if (currentRoom == null) {
-            System.out.println("No room selected.");
-            return;
-        }
+        if (currentRoom == null) return;
+
         List<Message> msgs = messageService.listMessagesByRoom(currentRoom.getRoomId());
         if (msgs == null || msgs.isEmpty()) {
             System.out.println("No messages.");
@@ -314,7 +310,7 @@ public class Main {
         }
         System.out.println("\n--- Messages ---");
         for (Message m : msgs) {
-            System.out.println("[" + m.getSent() + "] " + "User " + m.getUserId() + ": " + m.getContent());
+            System.out.println("[" + m.getSent() + "] User " + m.getUserId() + ": " + m.getContent());
         }
     }
 
@@ -340,8 +336,8 @@ public class Main {
         System.out.println("\n--- PROFILE ---");
         System.out.println("ID: " + loggedUser.getId());
         System.out.println("Name: " + loggedUser.getName());
-        System.out.println("Nickname: " + loggedUser.getNickName());
         System.out.println("Email: " + loggedUser.getEmail());
+        System.out.println("Nickname: " + loggedUser.getNickName());
     }
 
     private static void updateProfile() {
